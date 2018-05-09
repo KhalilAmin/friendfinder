@@ -8,37 +8,40 @@ module.exports = function (app) {
 
   app.post("/api/friends", function (req, res) {
     var results = req.body;
-    var friend = {
+    var newFriend = {
       Name: results.name,
       Photo: results.photo,
-      Responses: [results.q1, results.q2, results.q3, results.q4, results.q5, results.q6, results.q7, results.q8, results.q9, results.q10],
+      Responses: [parseInt(results.q1), parseInt(results.q2), parseInt(results.q3), parseInt(results.q4), parseInt(results.q5), parseInt(results.q6), parseInt(results.q7), parseInt(results.q8), parseInt(results.q9), parseInt(results.q10)],
       Matches: []
     };
     
     totalDiffArr = [];
     
-    for (var i = 0; i < friend.Responses.length; i++) {
+    for (var i = 0; i < friends.length; i++) {
       var totalDiff = 0;
       for (var j = 0; j < 10; j++) {
-        var x = parseInt(friend.Response[j]);
+        var x = parseInt(newFriend.Responses[j]);
         var y = parseInt(friends[i].Responses[j]);
 
         var diff = Math.abs(x-y);
 
-        totalDiff =+ diff;
+        totalDiff += diff;
       }
 
       totalDiffArr.push(totalDiff);
     }
 
-    var matchVal = Math.min(...totalDiffArr).toString();
-    var matchInd = friends.indexOf(matchVal);
+    console.log(newFriend);
+    console.log(totalDiffArr);
+    var matchVal = Math.min(...totalDiffArr);
+    var matchInd = totalDiffArr.indexOf(matchVal);
+    console.log(matchVal);
+    console.log(matchInd);
+    var matchName = friends[matchInd].Name;
 
-    var matchName = friends[matchInd].name;
+    newFriend.Matches.push(matchName);
 
-    friend.Matches.push(matchName);
-
-    friends.push(friend);
+    friends.push(newFriend);
     
     console.log(friends);
     res.redirect("/api/friends");
